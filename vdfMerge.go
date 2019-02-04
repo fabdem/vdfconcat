@@ -52,7 +52,7 @@ func main() {
 	flag.Parse()
 	
 	if versionFlg {
-		fmt.Printf("Version %s\n", "2019-02  v0.1.0")
+		fmt.Printf("Version %s\n", "2019-02  v0.1.2")
 		os.Exit(0)
 	}
 	
@@ -220,7 +220,7 @@ func main() {
 			os.Stdout.Write(UTF16bombe[0:])
 		case encoding == "UTF8bom":
 			os.Stdout.Write(UTF8bom[0:])
-			fmt.Printf("Add utf8 BOM\n")
+			//fmt.Printf("Add utf8 BOM\n")
 		case encoding == "UTF8":
 			// nada
 	}
