@@ -31,11 +31,19 @@ var cTab []byte
 
 var bom []byte
 
+var UTF16bomle []byte
+var UTF16bombe []byte
+var UTF8bom    []byte
+
 
 func main() {
 
 	var versionFlg bool
 	const usageVersion   = "Display Version"
+	
+	UTF16bomle = []byte{0xFF, 0xFE}
+	UTF16bombe = []byte{0xFE, 0xFF}
+	UTF8bom = []byte{0xEF, 0xBB, 0xBF}
 	
 	flag.BoolVar(&versionFlg, "version", false, usageVersion)
 	flag.BoolVar(&versionFlg, "v", false, usageVersion + " (shorthand)")
@@ -92,6 +100,7 @@ func main() {
 			log.Fatalf("Only files encoded in UTF16 BOM LE/BE or UTF8/BOM can be processed.\n")
 	}
 
+	// Guess encoding of f2 and remove the code header is any
 	if encoding != guessEncoding(f2) {
 		log.Fatalf("Files have different encoding!\n")
 	}
@@ -203,6 +212,18 @@ func main() {
         }
     }
 
+	// Output file encoding 
+	switch {
+		case encoding == "UTF16bomle":
+			os.Stdout.Write(UTF16bomle[0:])
+		case encoding == "UTF16bombe":
+			os.Stdout.Write(UTF16bombe[0:])
+		case encoding == "UTF8bom":
+			os.Stdout.Write(UTF8bom[0:])
+			fmt.Printf("Add utf8 BOM\n")
+		case encoding == "UTF8":
+			// nada
+	}
     
     os.Stdout.Write(buf[0:i])
 
@@ -214,7 +235,7 @@ func main() {
 
     //fmt.Printf("Lenght read %d\n", sizeRead)
 
-    os.Stdout.Write(buf[0:sizeRead - 1])
+    os.Stdout.Write(buf[0:sizeRead])
 
 }
 
@@ -229,9 +250,6 @@ func guessEncoding(theFile *os.File) string {
 	theFile.Seek(0, 0) // rewind the file - BOM is at the begining
 
 	const BUFF_SIZE = 4
-	var UTF16bomle = []byte{0xFF, 0xFE}
-	var UTF16bombe = []byte{0xFE, 0xFF}
-	var UTF8bom = []byte{0xEF, 0xBB, 0xBF}
 
 	firstFewBytes := make([]byte, BUFF_SIZE)
 	if _, err := theFile.Read(firstFewBytes); err != nil {
