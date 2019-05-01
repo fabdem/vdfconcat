@@ -1,2 +1,2 @@
-# vdfMerge
-Merge 2 vdf files
+# vdfconcat
+Concatanate 2 vdf files
