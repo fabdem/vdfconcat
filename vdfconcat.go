@@ -52,7 +52,7 @@ func main() {
 	flag.Parse()
 
 	if versionFlg {
-		fmt.Printf("Version %s\n", "2019-05  v0.1.4")
+		fmt.Printf("Version %s\n", "2019-06  v0.1.4")
 		os.Exit(0)
 	}
 
@@ -100,9 +100,8 @@ func main() {
 			log.Fatalf("Only files encoded in UTF16 BOM LE/BE or UTF8/BOM can be processed.\n")
 	}
 
-	// Check encoding - allows utf8/utf8bom mix
-	encoding2 := guessEncoding(f2)
-	if encoding != encoding2 && (encoding != "UTF8bom" || encoding2 != "UTF8") {
+	// Guess encoding of f2 and remove the code header is any
+	if encoding != guessEncoding(f2) {
 		log.Fatalf("Files have different encoding!\n")
 	}
 
@@ -238,6 +237,7 @@ func main() {
     //fmt.Printf("Lenght read %d\n", sizeRead)
 
     os.Stdout.Write(buf[0:sizeRead])
+		os.Stdout.Write([]byte("\n"))  // Add a newline at the end of the file
 
 }
 
