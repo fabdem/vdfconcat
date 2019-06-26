@@ -52,7 +52,7 @@ func main() {
 	flag.Parse()
 
 	if versionFlg {
-		fmt.Printf("Version %s\n", "2019-06  v0.1.4")
+		fmt.Printf("Version %s\n", "2019-06  v0.1.5")
 		os.Exit(0)
 	}
 
